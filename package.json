@@ -1,0 +1,18 @@
+{
+  "name": "pangea-item-calc",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "xyashino",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^21.2.2"
+  },
+  "dependencies": {
+    "puppeteer": "^19.2.2"
+  }
+}
