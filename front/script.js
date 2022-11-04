@@ -23,12 +23,15 @@ function createField(e) {
 
     const removeBtn = document.createElement('button');
     removeBtn.classList.add('remove');
-    removeBtn.textContent= "Usuń";
+    console.log();
+    removeBtn.textContent= "✖";
     removeBtn.addEventListener('click',(e)=>removeItem(e));
 
     label.appendChild(textInput);
     label.appendChild(numInput);
-    label.appendChild(removeBtn);
+    if(fields.children.length !== 0){
+        label.appendChild( removeBtn);
+    }
     fields.appendChild(label);
     count++;
 
@@ -50,15 +53,29 @@ async function getResult(e) {
     section.appendChild(spinner);
 
    const test = await ipcRenderer.invoke('request-get-prices',result);
-   const ul = document.createElement('ul');
-   ul.classList.add('result')
+   const table =  document.createElement('table');
+    const thead =  document.createElement('thead');
+    thead.innerHTML=`<tr>
+    <th>Nazwa</th>
+    <th>Cena za sztuke </th>
+    <th>Ilosc Sztuk</th>
+     <th>Razem</th>
+  </tr>`
+   const tbody = document.createElement('tbody');
+   tbody.classList.add('result')
    test.forEach(obj=>{
-       const li=document.createElement('li');
-        li.innerHTML=`<b>${obj.itemName}:</b> ${obj.price ? `<em>1szt.=${obj.price}B <em>${obj.quantity}szt.=${+obj.price * obj.quantity}B</em>` :"<span style='color: darkred'>Brak Ceny</span>"}`;
-        ul.appendChild(li);
+       const tr=document.createElement('tr');
+        tr.innerHTML=`<th>${obj.itemName}</th>  <td>${!obj.price ? "Brak" : obj.price+"B"}</td> <td>${obj.quantity}</td> <td>${!obj.price ? "Brak" : (obj.quantity *obj.price).toFixed(3)+"B"}</td> `;
+       tbody.appendChild(tr);
    });
+   const sum=test.reduce((prev,curr)=>prev+(curr.price * curr.quantity),0);
    section.textContent='';
-   section.appendChild(ul);
+   table.appendChild(thead);
+   table.appendChild(tbody);
+   section.appendChild(table);
+   const p = document.createElement('div');
+   p.innerHTML =`<b>Łącznie ${sum.toFixed(3)}B</b> `;
+   section.appendChild(p);
 }
 
 

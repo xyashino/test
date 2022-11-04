@@ -1,7 +1,7 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: s;
+    box-sizing: border-box;
     font-family: arial sans-serif;
     color: #242423;
 }
@@ -19,7 +19,13 @@ h1 {
 }
 button {
     cursor: pointer;
-    padding: 5px;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #242423;
+    border: 2px solid #242423;
+    background-color: #FCA311;
+
 }
 label {
     margin: 5px ;
@@ -39,7 +45,7 @@ input[type=number]{
     justify-content: center;
     background-color: #e5e5e5;
     width: 90vw;
-    min-height: 80vh;
+    min-height: 90%;
     padding: 50px;
 }
 .fields {
@@ -47,15 +53,6 @@ input[type=number]{
     flex-direction: column;
 }
 .search{
-    width: 90%;
-    height: 80px;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #FCA311;
-    color: #242423;
-    font-size: 15px;
-    font-weight: bold;
-    border: none;
     transition: .2s;
 }
 .search:hover{
@@ -63,20 +60,56 @@ input[type=number]{
 }
 .left {
     width: 65%;
-    min-height: 70%;
+    flex: 1;
 }
 .right{
 
     display: flex;
+    flex-direction: column;
     /*justify-content: center;*/
     /*align-items: center;*/
     width: 35%;
-    min-height: 70%;
+    flex: 1;
+}
+.right div {
+    margin-top: 15px;
+}
+.right div b{
+    font-size: 25px;
 }
 .result{
     list-style: none;
     align-self: self-start;
 }
+.remove {
+    background-color: transparent;
+    border: none;
+}
+.item{
+    display: flex;
+    align-items: center;
+}
 nav {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
+    height: 100px;
+}
+td , th {
+    padding: 5px;
+    color: #242423;
+    background-color: #FCA311;
+    margin: 0;
+}
+tr{
+    border: 1px solid #14213d;
+}
+th {
+background-color: #242423;
+    color: whitesmoke;
+}
+h2 {
+    margin: 15px 0;
 }

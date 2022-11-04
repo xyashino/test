@@ -1,31 +1,41 @@
 const puppeteer = require('puppeteer');
 
-const scrapPrice = async (item)=>{
+async function clear(page, selector) {
+    await page.evaluate(selector => {
+        document.querySelector(selector).value = "";
+    }, selector);
+}
+const getPrice = async (arrayOfObject) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto('https://pangeayt2.eu/#exchange');
-    await page.mouse.click(0, 0, {button: 'left'})
-    await page.type('#autocomplete-ajax', item + '');
-    const element = await page.waitForSelector('#exchange-table > tbody > tr:nth-child(1) > td:nth-child(2)');
-    const value = await element.evaluate(el => el.textContent);
-    await browser.close();
-    return value;
-}
-
-const getPrice = async (arrayOfObject) => {
-    return await Promise.all(arrayOfObject.map(async (obj)=>{
-        const scrapedPrice = await scrapPrice(obj.itemName);
-        console.log(scrapedPrice)
-        if (scrapedPrice === '') return {itemName:obj.itemName,price:null, quantity:obj.quantity}
-        const price = +scrapedPrice.replace(',','.').replace('B','').trim();
-        return {
-            itemName:obj.itemName,
-            price,
-            quantity:obj.quantity,
+    await page.mouse.click(0, 0, {button: 'left'});
+    const result=[]
+    for await (const obj of arrayOfObject) {
+        const firstUrl = page.url();
+        await clear(page,'#autocomplete-ajax');
+        await page.focus('#autocomplete-ajax');
+        await page.type('#autocomplete-ajax', obj.itemName + '');
+        await page.keyboard.press("Enter");
+        const secondUrl=page.url();
+        if(firstUrl===secondUrl) continue ;
+        const element = await page.waitForSelector('#exchange-table > tbody > tr:nth-child(1) > td:nth-child(2)');
+        const value = await element.evaluate(el => el.textContent)
+        if (value === '') {
+             result.push({itemName: obj.itemName, price: 0, quantity: obj.quantity});
+            continue
         }
-    }))
+        const price = +value.trim().replace(',', '.').replace('B', '').replace(' ','');
+        result.push( {
+            itemName: obj.itemName,
+            price,
+            quantity: obj.quantity,
+        })
+    }
+    await browser.close();
+    return result
 }
 
-module.exports= {
+module.exports = {
     getPrice
 }
